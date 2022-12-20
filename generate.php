@@ -1,6 +1,8 @@
 <?php
-// You'll need the Composer Autoloader.
 require 'vendor/autoload.php';
+
+use StubsGenerator\StubsGenerator;
+use Symfony\Component\Finder\Finder;
 
 if ( ! isset( $argv[1] ) ) {
 	die( "\n" . 'You must provide the WordPress plugins directory path.'
@@ -16,15 +18,12 @@ if ( ! is_dir( $plugins_path ) ) {
 	die( "\n" . $argv[1] . ' does not exist.' );
 }
 
-// You may alias the classnames for convenience.
-
-use StubsGenerator\StubsGenerator;
-use Symfony\Component\Finder\Finder;
-
+$theme_dir = realpath( $plugins_path . '/../themes/fo' );
 
 // First, instantiate a `StubsGenerator\StubsGenerator`.
 $generator = new StubsGenerator();
 
+// generate stub files for all FO plugins
 $finder = new Finder();
 $finder->directories()
 	  ->name('fo-*')
@@ -46,9 +45,22 @@ if ( $finder->hasResults() ) {
 		$result = $generator->generate($plugin_finder);
 
 		// Save stubs to file.
-		file_put_contents( $plugin . '.php', $result->prettyPrint() );
+		file_put_contents( 'stubs/' . $plugin . '.php', $result->prettyPrint() );
 
 	}
 }
-exit;
 
+
+// Get some files from theme
+$theme_finder = new Finder();
+$theme_finder->files()
+		   ->name( array('functions.php', 'woocommerce.php', 'admin.php' ) )
+		   ->ignoreVCSIgnored( true )
+		   ->in( $theme_dir );
+
+// Now use the `StubsGenerator::generate()` method,
+// which will return a `StubsGenerator\Result` instance.
+$result = $generator->generate($theme_finder);
+
+// Save stubs to file.
+file_put_contents( 'stubs/fo-wp-theme.php', $result->prettyPrint() );
