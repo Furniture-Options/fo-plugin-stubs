@@ -46,7 +46,6 @@ if ( $finder->hasResults() ) {
 
 		// Save stubs to file.
 		file_put_contents( 'stubs/' . $plugin . '.php', $result->prettyPrint() );
-
 	}
 }
 
