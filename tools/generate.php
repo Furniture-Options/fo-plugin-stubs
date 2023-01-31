@@ -48,7 +48,7 @@ if ( $finder->hasResults() ) {
 		$result = $generator->generate( $plugin_finder );
 
 		// Save stubs to file.
-		file_put_contents( '../stubs/' . $plugin . '.php', $result->prettyPrint() );
+		file_put_contents( __DIR__ . '/../stubs/' . $plugin . '.php', $result->prettyPrint() );
 	}
 }
 
