@@ -52,7 +52,7 @@ class Plugin extends \FO_UTM_Tracking\Abstract_Plugin
     // prefix for plugin
     protected static $prefix = 'fo_tracking_';
     // supported fields
-    protected static $supported_fields = array('utm_source', 'utm_medium', 'utm_campaign', 'type');
+    protected static $supported_fields = array('utm_id', 'utm_term', 'utm_content', 'utm_source', 'utm_medium', 'utm_campaign', 'type');
     // changelog for UpdateNotices
     protected static $changelog = array('1.0.0' => array('Added: WooCommerce now tracks UTM codes from inbound links on orders/subscriptions'));
     // gets list of supported fields
@@ -107,7 +107,7 @@ class Frontend
     protected function __construct()
     {
     }
-    // Main Extension Instance.
+    /** Main Extension Instance. */
     public static function instance()
     {
     }

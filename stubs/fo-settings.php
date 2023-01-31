@@ -240,7 +240,8 @@ namespace FO_Settings {
         public function save()
         {
         }
-        /*                                          *
+        /*
+         *
          *   Class Methods Specific to This Class   *
          *                                          */
         // add content to settings tab
@@ -251,7 +252,7 @@ namespace FO_Settings {
         public function translate($translated_text)
         {
         }
-        // gets settings for section
+        // Gets settings for section.
         public function get_settings_for_section_core($current_section)
         {
         }
