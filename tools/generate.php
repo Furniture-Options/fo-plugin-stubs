@@ -29,7 +29,7 @@ $finder = new Finder();
 $finder->directories()
 	   ->in( $plugins_path )
 	   ->name( 'fo-*' )
-	   ->notName( 'vendor' )
+	   ->notName( '*vendor*' )
 	   ->ignoreVCSIgnored( true );
 
 if ( $finder->hasResults() ) {
@@ -77,6 +77,7 @@ $addl_plugins = array(
 	'woocommerce-avatax',
 	'woocommerce-composite-products',
 	'woocommerce-product-bundles',
+	'woocommerce-store-exporter-deluxe',
 	'woocommerce-gateway-paypal-powered-by-braintree',
 	'automatewoo',
 	'woocommerce-all-products-for-subscriptions',
@@ -87,7 +88,7 @@ $finder->directories()
 	->in( $plugins_path )
 	->name( $addl_plugins )
 	->ignoreVCSIgnored( true )
-	->notName( 'vendor' );
+	->notName( '*vendor*' );
 
 if ( $finder->hasResults() ) {
 	foreach ( $finder as $dir ) {
@@ -98,7 +99,7 @@ if ( $finder->hasResults() ) {
 
 		// Create a `StubsGenerator\Finder` which contains
 		// the set of files you wish to generate stubs for.
-		$plugin_finder = Finder::create()->in( $absolute_dir_path )->ignoreVCSIgnored( true )->notName( 'vendor' );
+		$plugin_finder = Finder::create()->in( $absolute_dir_path )->ignoreVCSIgnored( true )->notName( '*vendor*' );
 
 		// Now use the `StubsGenerator::generate()` method,
 		// which will return a `StubsGenerator\Result` instance.

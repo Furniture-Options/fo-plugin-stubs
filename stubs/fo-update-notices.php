@@ -146,68 +146,6 @@ namespace FO_Update_Notices {
     }
 }
 namespace {
-    /**
-     * Class PAnD
-     */
-    class PAnD
-    {
-        /**
-         * Init hooks.
-         */
-        public static function init()
-        {
-        }
-        /**
-         * Enqueue javascript and variables.
-         */
-        public static function load_script()
-        {
-        }
-        /**
-         * Handles Ajax request to persist notices dismissal.
-         * Uses check_ajax_referer to verify nonce.
-         */
-        public static function dismiss_admin_notice()
-        {
-        }
-        /**
-         * Is admin notice active?
-         *
-         * @param string $arg data-dismissible content of notice.
-         *
-         * @return bool
-         */
-        public static function is_admin_notice_active($arg)
-        {
-        }
-        /**
-         * Returns admin notice cached timeout.
-         *
-         * @access public
-         *
-         * @param string|bool $id admin notice name or false.
-         *
-         * @return array|bool The timeout. False if expired.
-         */
-        public static function get_admin_notice_cache($id = \false)
-        {
-        }
-        /**
-         * Sets admin notice timeout in site option.
-         *
-         * @access public
-         *
-         * @param string      $id       Data Identifier.
-         * @param string|bool $timeout  Timeout for admin notice.
-         *
-         * @return bool
-         */
-        public static function set_admin_notice_cache($id, $timeout)
-        {
-        }
-    }
-}
-namespace {
     // global function to add update notice
     function fo_add_update_notice($name, $prefix, $version, $changes)
     {

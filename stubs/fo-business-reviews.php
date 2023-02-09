@@ -4,26 +4,29 @@ namespace FO_Reviews;
 
 class Frontend
 {
-    // The single instance of the class.
-    protected static $_instance = null;
-    // Constructor
+    /**
+     * The single instance of the class.
+     *
+     * @var null|object
+     */
+    protected static $instance = null;
     protected function __construct()
     {
     }
-    // Main Extension Instance.
+    /** Main Extension Instance. */
     public static function instance()
     {
     }
-    // Cloning is forbidden.
+    /** Cloning is forbidden. */
     public function __clone()
     {
     }
-    // Unserializing instances of this class is forbidden.
+    /** Unserializing instances of this class is forbidden. */
     public function __wakeup()
     {
     }
     //
-    // main class methods
+    // main class methods.
     //
     private function init_plugin()
     {
@@ -57,6 +60,9 @@ abstract class Abstract_Plugin
     // core class methods
     //
     protected function __construct()
+    {
+    }
+    public static function get_helpers()
     {
     }
     public static function instance()
@@ -132,39 +138,39 @@ abstract class Abstract_Plugin
 }
 class Plugin extends \FO_Reviews\Abstract_Plugin
 {
-    // plugin name
+    // plugin name.
     protected static $name = 'FO Business Reviews';
-    // plugin version
+    // plugin version.
     protected static $version = '1.0.0';
-    // prefix for plugin
+    // prefix for plugin.
     protected static $prefix = 'fo_reviews_';
-    // changelog for UpdateNotices
+    // changelog for UpdateNotices.
     protected static $changelog = array();
     private static $location_settings = array('google_review_url' => array('title' => 'Google Review URL', 'type' => 'text', 'css' => 'width:300px', 'property' => 'google_review_url'));
     public function __construct()
     {
     }
     //
-    // main class methods
+    // main class methods.
     //
-    // add our custom settings to the list of location settings
+    // add our custom settings to the list of location settings.
     public static function get_location_settings($settings)
     {
     }
-    // add data to $city object returned by get_city_by_slug() and get_cities()
+    // add data to $city object returned by get_city_by_slug() and get_cities().
     public function add_extra_city_config($city)
     {
     }
-    // add workflow/order-related data to globals for reviews links in AutomateWoo e-mails
+    // add workflow/order-related data to globals for reviews links in AutomateWoo e-mails.
     public function add_aw_data_to_globals($value, $name, $process_variables, $workflow_email)
     {
     }
-    // add order-related data to globals for review links in non-AutomateWoo e-mails
+    // add order-related data to globals for review links in non-AutomateWoo e-mails.
     public function add_order_data_to_globals($order, $sent_to_admin)
     {
     }
-    // adds review links after email body
-    function add_email_links()
+    // adds review links after email body.
+    public function add_email_links()
     {
     }
     public function add_reviews_rewrite_rule()

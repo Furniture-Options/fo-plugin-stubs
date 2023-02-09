@@ -1,16 +1,24 @@
 <?php
 
+namespace FO_Sequential_Order_Number;
+
 class WC_Seq_Order_Number
 {
-    /** version number */
-    const VERSION = '2.0.0';
-    protected static $changelog = array('2.0.0' => array('Fixed: Searching subscriptions by subscription number now works as expected (supports searching by full number [e.g. C000147] or partial [e.g. 147])'));
-    /** minimum required wc version */
-    const MINIMUM_WC_VERSION = '3.9.4';
-    /** @var \WC_Seq_Order_Number single instance of this plugin */
+    /** Version number */
+    public const VERSION = '2.0.0';
+    protected static $changelog = array('2.1.0' => array('Fixed: No longer using deprecated hook'), '2.0.0' => array('Fixed: Searching subscriptions by subscription number now works as expected (supports searching by full number [e.g. C000147] or partial [e.g. 147])'));
+    /** Minimum required wc version */
+    public const MINIMUM_WC_VERSION = '3.9.4';
+    /**
+     * Single instance of this plugin
+     *
+     * @var \WC_Seq_Order_Number
+     */
     protected static $instance;
-    /** version option name */
-    const VERSION_OPTION_NAME = 'woocommerce_seq_order_number_db_version';
+    /**
+     * Version option name
+     */
+    public const VERSION_OPTION_NAME = 'woocommerce_seq_order_number_db_version';
     /**
      * Construct the plugin
      *
@@ -44,21 +52,13 @@ class WC_Seq_Order_Number
     public function initialize()
     {
     }
-    /**
-     * Load Translations
-     *
-     * @since 1.3.3
-     */
-    public function load_translation()
-    {
-    }
     public function add_update_notice()
     {
     }
     /**
      * Search for an order with order_number $order_number
      *
-     * @param string $order_number order number to search for
+     * @param string $order_number order number to search for.
      *
      * @return int post_id for the order identified by $order_number, or 0
      */
@@ -68,8 +68,8 @@ class WC_Seq_Order_Number
     /**
      * Set the _order_number field for the newly created order
      *
-     * @param int      $post_id post identifier
-     * @param \WP_Post $post    post object
+     * @param int      $post_id post identifier.
+     * @param \WP_Post $post    post object.
      */
     public function set_sequential_order_number($post_id, $post)
     {
@@ -78,8 +78,8 @@ class WC_Seq_Order_Number
      * Filter to return our _order_number field rather than the post ID,
      * for display.
      *
-     * @param string    $order_number the order id with a leading hash
-     * @param \WC_Order $order        the order object
+     * @param string    $order_number the order id with a leading hash.
+     * @param \WC_Order $order        the order object.
      *
      * @return string custom order number
      */
@@ -90,7 +90,7 @@ class WC_Seq_Order_Number
     /**
      * Admin order table orderby ID operates on our meta _order_number
      *
-     * @param array $vars associative array of orderby parameteres
+     * @param array $vars associative array of orderby parameteres.
      *
      * @return array associative array of orderby parameteres
      */
@@ -102,7 +102,7 @@ class WC_Seq_Order_Number
      *
      * @since 1.3
      *
-     * @param array $args associative array of orderby parameteres
+     * @param array $args associative array of orderby parameteres.
      *
      * @return array associative array of orderby parameteres
      */
@@ -113,7 +113,7 @@ class WC_Seq_Order_Number
      * Add our custom _order_number to the set of search fields so that
      * the admin search functionality is maintained
      *
-     * @param array $search_fields array of post meta fields to search by
+     * @param array $search_fields array of post meta fields to search by.
      *
      * @return array of post meta fields to search by
      */
@@ -126,12 +126,11 @@ class WC_Seq_Order_Number
      *
      * @since 1.3
      *
-     * @param \WC_Order        $renewal_order the new renewal order object
-     * @param \WC_Subscription $subscription  Post ID of a 'shop_subscription' post, or instance of a WC_Subscription object
+     * @param \WC_Order $renewal_order  the new renewal order object.
      *
-     * @return \WC_Order renewal order instance
+     * @return \WC_Order                renewal order instance
      */
-    public function subscriptions_set_sequential_order_number($renewal_order, $subscription)
+    public function subscriptions_set_sequential_order_number($renewal_order)
     {
     }
     /**
@@ -142,7 +141,7 @@ class WC_Seq_Order_Number
      *
      * @since 1.3
      *
-     * @param array $order_meta_query query for pulling the metadata
+     * @param array $order_meta_query query for pulling the metadata.
      *
      * @return string
      */
@@ -152,8 +151,8 @@ class WC_Seq_Order_Number
     /**
      * Hook WooCommerce Admin's order number search to the meta value.
      *
-     * @param array           $args    arguments to be passed to WC_Order_Query
-     * @param WP_REST_Request $request REST API request being made
+     * @param array           $args    arguments to be passed to WC_Order_Query.
+     * @param WP_REST_Request $request REST API request being made.
      *
      * @return array arguments to be passed to WC_Order_Query
      */
@@ -177,7 +176,7 @@ class WC_Seq_Order_Number
      *
      * @since 1.8.3
      *
-     * @param string $plugin_name plugin name, as the plugin-filename.php
+     * @param string $plugin_name plugin name, as the plugin-filename.php.
      *
      * @return bool true if the named plugin is installed and active
      */
@@ -227,12 +226,28 @@ class WC_Seq_Order_Number
      *
      * 1.0.0
      *
-     * @param string $installed_version
+     * @param string $installed_version Installed version.
      */
     private function upgrade($installed_version)
     {
     }
 }
+/**
+ * Plugin Name: FO WC Sequential Order Numbers
+ * Description: Provides sequential order numbers for WooCommerce orders
+ * Author: SkyVerge + Jesse Kaufman
+ * Version: 2.0.0
+ *
+ * License: GNU General Public License v3.0
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * WC requires at least: 3.9.4
+ * WC tested up to: 6.2.1
+ *
+ * @package fo
+ */
+namespace FO_Sequential_Order_Number;
+
 /**
  * Returns the One True Instance of Sequential Order Numbers
  *

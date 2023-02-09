@@ -150,10 +150,6 @@ namespace FO_WC_Blackout_Dates {
         public function save_blackout_date($post_id)
         {
         }
-        // gets cities from database
-        private function get_cities($type = '')
-        {
-        }
         // add inline css
         public function add_css()
         {

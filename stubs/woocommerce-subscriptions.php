@@ -15,9 +15,9 @@ namespace {
         /** @var string */
         public static $plugin_file = __FILE__;
         /** @var string */
-        public static $version = '4.7.0';
+        public static $version = '4.8.1';
         /** @var string */
-        public static $wc_minimum_supported_version = '6.0';
+        public static $wc_minimum_supported_version = '6.5';
         /** @var WCS_Cache_Manager */
         public static $cache;
         /** @var WCS_Autoloader */
@@ -358,6 +358,8 @@ namespace {
          * If the cart contains a renewal order that needs to ship to an address that is different
          * to the order's billing address, tell the checkout to toggle the ship to a different address
          * checkbox and make sure the shipping fields are displayed by default.
+         *
+         * @deprecated subscriptions-core 5.3.0 - This method has moved to the WC_Subscriptions_Checkout class.
          *
          * @param bool $ship_to_different_address Whether the order will ship to a different address
          * @return bool $ship_to_different_address
@@ -1017,12 +1019,27 @@ namespace {
         {
         }
         /**
+         * Excludes core properties from being copied to the renewal order when an early renewal is created.
+         *
+         * These core order properties are set when the order is created via the checkout and should not be
+         * copied from the subscription in case they were changed via the checkout process.
+         *
+         * @since 4.8.0
+         *
+         * @param array $order_data The data to be copied to the early renewal order. Each value is keyed by the meta key. Example format [ '_meta_key' => 'meta_value' ].
+         * @return array $order_data The filtered set of order data.
+         */
+        public function exclude_core_properties_from_copy($order_data)
+        {
+        }
+        /**
          * Excludes core order meta properties from the meta copied from the subscription.
          *
          * Attached to the dynamic hook 'wcs_renewal_order_meta' which is triggered by wcs_copy_order_meta
          * when copying meta from the subscription to the early renewal order.
          *
          * @since 2.5.6
+         * @deprecated 4.8.0
          *
          * @param array $order_meta The meta keys and values to copy from the subscription to the early renewal order.
          * @return array The subscription meta to copy to the early renewal order.
@@ -1672,6 +1689,17 @@ namespace {
         {
         }
         /**
+         * Attaches hooks that depend on WooCommerce being loaded.
+         *
+         * We need to use different hooks on stores that have HPOS enabled but to check if this feature
+         * is enabled, we must wait for WooCommerce to be loaded first.
+         *
+         * @since 4.8.0
+         */
+        public static function attach_wc_dependant_hooks()
+        {
+        }
+        /**
          * Adds any extra status that may be needed for a given order to check if it may
          * need payment
          *
@@ -1712,9 +1740,9 @@ namespace {
         /**
          * When a (renewal) order is trashed or deleted, make sure its retries are also trashed/deleted.
          *
-         * @param int $post_id
+         * @param int $order_id
          */
-        public static function maybe_cancel_retry_for_order($post_id)
+        public static function maybe_cancel_retry_for_order($order_id)
         {
         }
         /**
@@ -1855,8 +1883,11 @@ namespace {
         }
         /**
          * Add a meta box to the Edit Order screen to display the retries relating to that order
+         *
+         * @param string           $post_type Optional. Post type. Default empty.
+         * @param WC_Order|WP_Post $order     Optional. The Order object. Default null. If null, the global $post is used.
          */
-        public function add_meta_boxes()
+        public function add_meta_boxes($post_type = '', $order = \null)
         {
         }
         /**
@@ -1911,9 +1942,11 @@ namespace {
     class WCS_Meta_Box_Payment_Retries
     {
         /**
-         * Output the metabox
+         * Outputs the Payment retry metabox.
+         *
+         * @param WC_Order|WP_Post $order The order object or post object.
          */
-        public static function output($post)
+        public static function output($order)
         {
         }
     }
@@ -4038,6 +4071,7 @@ namespace {
          * @param  WC_Order $order The new order
          * @param  WC_Subscription $subscription The original subscription
          * @param  WC_Cart $recurring_cart A recurring cart
+         * @deprecated 4.8.0
          */
         public static function update_shipping_methods($subscription, $recurring_cart)
         {
@@ -5667,6 +5701,12 @@ namespace {
         {
         }
         /**
+         * Displays an admin notice indicating subscription reports are disabled on HPOS environments with no syncing.
+         */
+        public static function display_hpos_incompatibility_notice()
+        {
+        }
+        /**
          * Add the 'Subscriptions' report type to the WooCommerce reports screen.
          *
          * @param array Array of Report types & their labels, excluding the Subscription product type.
@@ -6070,7 +6110,7 @@ namespace {
          * The version of subscriptions-core library.
          * @var string
          */
-        protected $library_version = '5.1.0';
+        protected $library_version = '5.3.1';
         // WRCS: DEFINED_VERSION.
         /**
          * The subscription scheduler instance.
@@ -6843,11 +6883,23 @@ namespace {
          * Adds subscription fields to System Status response.
          *
          * @since 3.1.0
+         * @deprecated 4.8.0
          *
          * @param WP_REST_Response $response The base system status response.
          * @return WP_REST_Response
          */
         public static function add_subscription_fields_to_reponse($response)
+        {
+        }
+        /**
+         * Adds subscription fields to System Status response.
+         *
+         * @since 4.8.0
+         *
+         * @param WP_REST_Response $response The base system status response.
+         * @return WP_REST_Response
+         */
+        public static function add_subscription_fields_to_response($response)
         {
         }
         /**
@@ -8514,7 +8566,7 @@ namespace Composer\Installers {
 }
 namespace {
     // autoload_real.php @generated by Composer
-    class ComposerAutoloaderInitd9e1c72c848bf38bcf4c02adf95e21d4
+    class ComposerAutoloaderInitc0b9b1f26194ed575c65e531574945d8
     {
         private static $loader;
         public static function loadClassLoader($class)
@@ -8529,7 +8581,7 @@ namespace {
     }
 }
 namespace Composer\Autoload {
-    class ComposerStaticInitd9e1c72c848bf38bcf4c02adf95e21d4
+    class ComposerStaticInitc0b9b1f26194ed575c65e531574945d8
     {
         public static $prefixLengthsPsr4 = array('C' => array('Composer\\Installers\\' => 20));
         public static $prefixDirsPsr4 = array('Composer\\Installers\\' => array(0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers'));
@@ -8892,11 +8944,13 @@ namespace {
         }
     }
     /**
-     * Class for managing caches of post meta
+     * Class for managing caches of post meta.
+     *
+     * This class is intended to be used on stores using WP post architecture.
+     * Post related APIs and references in this class are expected, and shouldn't be replaced with CRUD equivalents.
      *
      * @version  1.0.0 - Migrated from WooCommerce Subscriptions v2.3.0
      * @category Class
-     * @author   Prospress
      */
     class WCS_Post_Meta_Cache_Manager
     {
@@ -9007,7 +9061,7 @@ namespace {
          * When a post object is restored from the trash, check if this class instance cares about updating its cache
          * to reflect the change.
          *
-         * @param int $post_id The post being restroed.
+         * @param int $post_id The post being restored.
          */
         public function post_untrashed($post_id)
         {
@@ -9016,7 +9070,7 @@ namespace {
          * When a post object is deleted or trashed, check if this class instance cares about updating its cache
          * to reflect the change.
          *
-         * @param int $post_id The post being restroed.
+         * @param int $post_id The post being restored.
          */
         public function post_deleted($post_id)
         {
@@ -11756,6 +11810,194 @@ namespace {
         public static function order_button_text($button_text)
         {
         }
+        /**
+         * If the cart contains a renewal order, resubscribe order or a subscription switch
+         * that needs to ship to an address that is different to the order's billing address,
+         * tell the checkout to check the "Ship to different address" checkbox.
+         *
+         * @since 5.3.0
+         *
+         * @param  bool $ship_to_different_address Whether the order will check the "Ship to different address" checkbox
+         * @return bool $ship_to_different_address
+         */
+        public static function maybe_check_ship_to_different_address($ship_to_different_address)
+        {
+        }
+    }
+    /**
+     * Class for managing caches of object data.
+     *
+     * This class will track changes to an object (specified by the object type value) and trigger an action hook for each change to any specific meta key or object (specified by the $data_keys variable).
+     * Interested parties (like our cache store classes), can then listen for these hooks and update their caches accordingly.
+     *
+     * @version  5.2.0
+     * @category Class
+     */
+    class WCS_Object_Data_Cache_Manager extends \WCS_Post_Meta_Cache_Manager
+    {
+        /**
+         * The WC_Data object type this cache manager will track changes to. eg 'order', 'subscription'.
+         *
+         * @var string
+         */
+        protected $object_type;
+        /**
+         * The object's data keys this cache manager will keep track of changes to. Can be an object property key ('customer_id') or meta key ('_subscription_renewal').
+         *
+         * @var array
+         */
+        protected $data_keys;
+        /**
+         * An internal record of changes to the object that this manager is tracking.
+         *
+         * This internal record is generated before the object is saved, so we can determine
+         * if the value has changed, what the previous value was, and what the new value is.
+         *
+         * In the event that the object is being created (doesn't have an ID prior to save), this
+         * record will be generated after the object is saved, and all the data this manager
+         * is tracking will be pulled from the created object.
+         *
+         * @var array Each element is keyed by the object's ID, and contains an array of tracked changes {
+         *     Data about the change that was made to the object.
+         *
+         *     @type mixed  $new      The new value.
+         *     @type mixed  $previous The previous value before it was changed.
+         *     @type string $type     The type of change. Can be 'update', 'add' or 'delete'.
+         * }
+         */
+        protected $object_changes = [];
+        /**
+         * Constructor.
+         *
+         * @param string The post type this cache manage acts on.
+         * @param array The post meta keys this cache manager should act on.
+         */
+        public function __construct($object_type, $data_keys)
+        {
+        }
+        /**
+         * Attaches callbacks to keep the caches up-to-date.
+         */
+        public function init()
+        {
+        }
+        /**
+         * Generates a set of changes for tracked meta keys and properties.
+         *
+         * This method is hooked onto an action which is fired before the object is saved.
+         * Relevant changes to the object's data is stored in the $this->object_changes property
+         * to be processed after the object is saved. See $this->action_object_cache_changes().
+         *
+         * @param WC_Data $object        The object which is being saved.
+         * @param string  $generate_type Optional. The data to generate the changes from. Defaults to 'changes_only' which will generate the data from changes to the object. 'all_fields' will fetch data from the object for all tracked data keys.
+         */
+        public function prepare_object_changes($object, $generate_type = 'changes_only')
+        {
+        }
+        /**
+         * Actions all the tracked data changes that were made to the object by triggering the update cache hook.
+         *
+         * This method is hooked onto an action which is fired after the object is saved.
+         *
+         * @param WC_Data $object The object which was saved.
+         */
+        public function action_object_cache_changes($object)
+        {
+        }
+        /**
+         * When an object is restored from the trash, action on object changes.
+         *
+         * @param int $object_id The object id being restored.
+         */
+        public function untrashed($object_id)
+        {
+        }
+        /**
+         * When an object is to be deleted, prepare object changes to update all fields
+         * and mark those changes as deletes.
+         *
+         * @param int   $object_id The id of the object being deleted.
+         * @param mixed $object    The object being deleted.
+         */
+        public function prepare_object_to_be_deleted($object_id, $object)
+        {
+        }
+        /**
+         * When an object is trashed, action on object changes.
+         *
+         * @param int $object_id The id of object being restored.
+         */
+        public function trashed($object_id)
+        {
+        }
+        /**
+         * When an object has been deleted, trigger update cache hook on all the object changes.
+         * We cannot use action_object_cache_changes(), which requires an object, here because
+         * object has been deleted.
+         *
+         * @param int $object_id The id of the object being deleted.
+         */
+        public function deleted($object_id)
+        {
+        }
+        /**
+         * Triggers the update cache hook for an object change.
+         *
+         * @param WC_Data $object The object that was changed.
+         * @param string  $key    The object's key that was changed. Can be a base property ('customer_id') or a meta key ('_subscription_renewal').
+         * @param array   $change {
+         *     Data about the change that was made to the object.
+         *
+         *     @type mixed  $new      The new value.
+         *     @type mixed  $previous The previous value before it was changed.
+         *     @type string $type     The type of change. Can be 'update', 'add' or 'delete'.
+         * }
+         */
+        protected function trigger_update_cache_hook_from_change($object, $key, $change)
+        {
+        }
+        /**
+         * Fetches an instance of the object with the given ID.
+         *
+         * @param int $object_id The ID of the object to fetch.
+         *
+         * @return mixed The object instance, or null if it doesn't exist.
+         */
+        private function get_object($id)
+        {
+        }
+    }
+    /**
+     * Class for managing caches of object data that have a many-to-one relationship.
+     *
+     * This applies to caches where only one should exist for the meta value. This differs to WCS_Object_Data_Cache_Manager
+     * which allows multiple caches for the same meta value i.e. a many-to-many relationship.
+     *
+     * @version  5.2.0
+     * @category Class
+     */
+    class WCS_Object_Data_Cache_Manager_Many_To_One extends \WCS_Object_Data_Cache_Manager
+    {
+        /**
+         * Triggers the update cache hook for an object change.
+         *
+         * In a one-to-many relationship, we need to pass the previous value to the hook so that
+         * any existing relationships are also deleted because we know the data should not allow
+         * relationships with multiple other values. e.g. a subscription can only belong to one customer.
+         *
+         * @param WC_Data $object The object that was changed.
+         * @param string  $key    The object's key that was changed. Can be a base property ('customer_id') or a meta key ('_subscription_renewal').
+         * @param array   $change {
+         *     Data about the change that was made to the object.
+         *
+         *     @type mixed  $new      The new value.
+         *     @type mixed  $previous The previous value before it was changed.
+         *     @type string $type     The type of change. Can be 'update', 'add' or 'delete'.
+         * }
+         */
+        protected function trigger_update_cache_hook_from_change($object, $key, $change)
+        {
+        }
     }
     /**
      * Abstract Subscription Cache Manager Class
@@ -13382,6 +13624,14 @@ namespace {
         {
         }
         /**
+         * Attach hooks that depend on WooCommerce being loaded.
+         *
+         * @since 5.2
+         */
+        public static function attach_wc_dependent_hooks()
+        {
+        }
+        /**
          * Save the download permissions on the individual subscriptions as well as the order. Hooked into
          * 'woocommerce_grant_product_download_permissions', which is strictly after the order received all the info
          * it needed, so we don't need to play with priorities.
@@ -13422,9 +13672,9 @@ namespace {
          * Repairs a glitch in WordPress's save function. You cannot save a null value on update, see
          * https://github.com/woocommerce/woocommerce/issues/7861 for more info on this.
          *
-         * @param integer $post_id The ID of the subscription
+         * @param integer $id The ID of the subscription
          */
-        public static function repair_permission_data($post_id)
+        public static function repair_permission_data($id)
         {
         }
         /**
@@ -13441,8 +13691,20 @@ namespace {
          * Remove download permissions attached to a subscription when it is permenantly deleted.
          *
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.0
+         *
+         * @param $id The ID of the subscription whose downloadable product permission being deleted.
          */
-        public static function delete_subscription_permissions($post_id)
+        public static function delete_subscription_permissions($id)
+        {
+        }
+        /**
+         * Remove download permissions attached to a subscription when it is permenantly deleted.
+         *
+         * @since 5.2.0
+         *
+         * @param $id The ID of the subscription whose downloadable product permission being deleted.
+         */
+        public static function delete_subscription_download_permissions($id)
         {
         }
         /**
@@ -13890,12 +14152,25 @@ namespace {
         {
         }
         /**
-         * Add the option to remove personal data from subscription via a bulk action.
+         * Adds the option to remove personal data from subscription via a bulk action.
          *
-         * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.20
+         * @since 5.2.0
+         *
          * @param array $bulk_actions Subscription bulk actions.
+         *
+         * @return array
          */
-        public static function add_remove_personal_data_bulk_action($bulk_actions)
+        public static function add_privacy_bulk_action($bulk_actions)
+        {
+        }
+        /**
+         * Handles the Remove Personal Data bulk action requests for Subscriptions.
+         *
+         * @param string $redirect_url     The default URL to redirect to after handling the bulk action request.
+         * @param string $action           The action to take against the list of subscriptions.
+         * @param array  $subscription_ids The list of subscription to run the action against.
+         */
+        public static function handle_privacy_bulk_actions($redirect_url, $action, $subscription_ids)
         {
         }
         /**
@@ -13971,6 +14246,16 @@ namespace {
          * @param WP_User_Query $user_query
          */
         public static function maybe_exclude_subscription_customers($user_query)
+        {
+        }
+        /* Deprecated Functions */
+        /**
+         * Add the option to remove personal data from subscription via a bulk action.
+         *
+         * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.20
+         * @param array $bulk_actions Subscription bulk actions.
+         */
+        public static function add_remove_personal_data_bulk_action($bulk_actions)
         {
         }
     }
@@ -16998,6 +17283,18 @@ namespace {
         {
         }
         /**
+         * Filters the Orders Table in HPOS to display_renewal_filter_noticehow only orders associated with a specific subscription.
+         *
+         * @since 5.2.0
+         *
+         * @param array $query_vars The query variables.
+         *
+         * @return array The query variables.
+         */
+        public static function filter_orders_table_by_related_orders($query_vars)
+        {
+        }
+        /**
          * Filters the Admin orders and subscriptions table results based on a list of IDs returned by a report query.
          *
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.6.2
@@ -17771,7 +18068,6 @@ namespace {
      * @package    WooCommerce Subscriptions
      * @subpackage WC_Subscriptions_Admin
      * @category   Class
-     * @author     Prospress
      * @since      1.0.0 - Migrated from WooCommerce Subscriptions v2.3.0
      */
     class WCS_Admin_System_Status
@@ -17817,6 +18113,12 @@ namespace {
         {
         }
         /**
+         * @param array $debug_data
+         */
+        private static function set_library_version(&$debug_data)
+        {
+        }
+        /**
          * List any Subscriptions template overrides.
          */
         private static function set_theme_overrides(&$debug_data)
@@ -17825,7 +18127,6 @@ namespace {
         /**
          * Determine which of our files have been overridden by the theme.
          *
-         * @author Jeremy Pry
          * @return array Theme override data.
          */
         private static function get_theme_overrides()
@@ -17909,9 +18210,14 @@ namespace {
         {
         }
         /**
-         * Don't save some order related meta boxes
+         * Don't save some order related meta boxes.
+         *
+         * @see woocommerce_process_shop_order_meta
+         *
+         * @param int      $order_id
+         * @param WC_Order $order
          */
-        public function remove_meta_box_save($post_id, $post)
+        public function remove_meta_box_save($order_id, $order)
         {
         }
         /**
@@ -18089,6 +18395,20 @@ namespace {
         public static function get_customer_orders()
         {
         }
+        /**
+         * Reorders the edit subscription screen meta boxes.
+         *
+         * Removes and readds the order items meta box so it appears after the subscription data.
+         *
+         * On HPOS environments, WC core registers the order-data and order-items meta boxes on a high priority before we've had a chance to add ours.
+         * This means, on the edit subscription screen, when we remove the order-data meta box and add our own, it will appear after the line items.
+         *
+         * In order to keep the correct ordering of the meta boxes on the edit subscription screen, we need to remove the line items meta box and
+         * readd it after we've added the subscription-data meta box.
+         */
+        private static function reorder_subscription_line_items_meta_box()
+        {
+        }
     }
     class WCS_WC_Admin_Manager
     {
@@ -18141,20 +18461,22 @@ namespace {
     class WCS_Meta_Box_Schedule
     {
         /**
-         * Output the metabox
+         * Outputs the subscription schedule metabox.
+         *
+         * @param WC_Subscription|WP_Post $subscription The subscription object to display the schedule metabox for. This will be a WP Post object on CPT stores.
          */
-        public static function output($post)
+        public static function output($subscription)
         {
         }
         /**
-         * Save meta box data
+         * Saves the subscription schedule meta box data.
          *
          * @see woocommerce_process_shop_order_meta
          *
-         * @param int $order_id
-         * @param WC_Order $order
+         * @param int                     $subscription_id The subscription ID to save the schedule for.
+         * @param WC_Subscription/WP_Post $subscription    The subscription object to save the schedule for.
          */
-        public static function save($order_id, $order)
+        public static function save($subscription_id, $subscription)
         {
         }
     }
@@ -18164,18 +18486,22 @@ namespace {
     class WCS_Meta_Box_Subscription_Data extends \WC_Meta_Box_Order_Data
     {
         /**
-         * Output the metabox
+         * Outputs the Subscription data metabox.
+         *
+         * @param WC_Subscription|WP_Post $subscription The subscription object to display the data metabox for. On CPT stores, this will be a WP Post object.
          */
-        public static function output($post)
+        public static function output($subscription)
         {
         }
         /**
-         * Save meta box data
+         * Saves the subscription data meta box.
          *
-         * @param int     $post_id
-         * @param WP_Post $post
+         * @see woocommerce_process_shop_order_meta
+         *
+         * @param int             $subscription_id Subscription ID.
+         * @param WC_Subscription $subscription Optional. Subscription object. Default null - will be loaded from the ID.
          */
-        public static function save($post_id, $post = \null)
+        public static function save($subscription_id, $subscription = \null)
         {
         }
     }
@@ -18258,9 +18584,12 @@ namespace {
         }
         /**
          * Displays the dropdown for the product filter
+         *
+         * @param string $order_type The type of order. This will be 'shop_subscription' for Subscriptions.
+         *
          * @return string the html dropdown element
          */
-        public function restrict_by_product()
+        public function restrict_by_product($order_type = '')
         {
         }
         /**
@@ -18273,17 +18602,15 @@ namespace {
         {
         }
         /**
-         * Add extra options to the bulk actions dropdown
+         * Alters the default bulk actions for the subscription object type.
          *
-         * It's only on the All Shop Subscriptions screen.
-         * Introducing new filter: woocommerce_subscription_bulk_actions. This has to be done through jQuery as the
-         * 'bulk_actions' filter that WordPress has can only be used to remove bulk actions, not to add them.
+         * Removes the default "edit", "mark_processing", "mark_on-hold", "mark_completed", "mark_cancelled" options from the bulk actions.
+         * Adds subscription-related actions for activating, suspending and cancelling.
          *
-         * This is a filterable array where the key is the action (will become query arg), and the value is a translatable
-         * string. The same array is used to
-         *
+         * @param array $actions An array of bulk actions admin users can take on subscriptions. In the format ( 'name' => 'i18n_text' ).
+         * @return array The bulk actions.
          */
-        public function print_bulk_actions_script()
+        public function filter_bulk_actions($actions)
         {
         }
         /**
@@ -18294,7 +18621,7 @@ namespace {
         {
         }
         /**
-         * Show confirmation message that subscription status was changed
+         * Shows confirmation message that subscription statuses were changed via bulk action.
          */
         public function bulk_admin_notices()
         {
@@ -18312,10 +18639,12 @@ namespace {
         {
         }
         /**
-         * Output custom columns for subscriptions
-         * @param string $column
+         * Outputs column content for the admin subscriptions list table.
+         *
+         * @param string       $column       The column name.
+         * @param WC_Order|int $subscription Optional. The subscription being displayed. Defaults to the global $post object.
          */
-        public function render_shop_subscription_columns($column)
+        public function render_shop_subscription_columns($column, $subscription = \null)
         {
         }
         /**
@@ -18369,12 +18698,77 @@ namespace {
         {
         }
         /**
-         * Filters and sorting handler
+         * Filters and sorts the request for subscriptions stored in WP Post tables.
          *
-         * @param  array $vars
+         * @param array $vars
+         *
          * @return array
          */
         public function request_query($vars)
+        {
+        }
+        /**
+         * Filters the List Table request for Subscriptions stored in HPOS.
+         *
+         * @since 5.2.0
+         *
+         * @param array $request_query The query args sent to wc_get_orders().
+         *
+         * @return array $request_query
+         */
+        public function filter_subscription_list_table_request_query($request_query)
+        {
+        }
+        /**
+         * Adds default query arguments for displaying subscriptions in the admin list table.
+         *
+         * By default, WC will fetch items to display in the list table by query the DB using
+         * order params (eg order statuses). This function is responsible for making sure the
+         * default request includes required values to return subscriptions.
+         *
+         * @param array $query_args The admin subscription's list table query args.
+         * @return array $query_args
+         */
+        public function add_subscription_list_table_query_default_args($query_args)
+        {
+        }
+        /**
+         * Checks if the current request is filtering query by customer user and then fetches the subscriptions
+         * that belong to that customer and sets the post__in query var to filter the request.
+         *
+         * @since 5.2.0
+         *
+         * @param array $request_query The query args sent to wc_get_orders().
+         *
+         * @return array $request_query
+         */
+        private function set_filter_by_customer_query($request_query)
+        {
+        }
+        /**
+         * Checks if the current request is filtering query by product and then fetches all subscription IDs for that product
+         * and sets the post__in query var to filter the request for the given array of subscription IDs.
+         *
+         * @since 5.2.0
+         *
+         * @param array $request_query The query args sent to wc_get_orders().
+         *
+         * @return array $request_query
+         */
+        private function set_filter_by_product_query($request_query)
+        {
+        }
+        /**
+         * Checks if the current request is filtering query by payment method and then fetches all subscription IDs
+         * for that payment method and sets the post__in query var to filter the request.
+         *
+         * @since 5.2.0
+         *
+         * @param array $request_query The query args sent to wc_get_orders().
+         *
+         * @return array $request_query
+         */
+        private function set_filter_by_payment_method_query($request_query)
         {
         }
         /**
@@ -18419,9 +18813,11 @@ namespace {
         /**
          * Displays the dropdown for the payment method filter.
          *
+         * @param string $order_type The type of order. This will be 'shop_subscription' for Subscriptions.
+         *
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.0
          */
-        public static function restrict_by_payment_method()
+        public static function restrict_by_payment_method($order_type = '')
         {
         }
         /**
@@ -18484,9 +18880,114 @@ namespace {
         /**
          * Renders the dropdown for the customer filter.
          *
+         * @param string $order_type The type of order. This will be 'shop_subscription' for Subscriptions.
+         *
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.17
          */
-        public static function restrict_by_customer()
+        public static function restrict_by_customer($order_type = '')
+        {
+        }
+        /**
+         * Generates the list of actions available on the Subscriptions list table.
+         *
+         * @param WC_Subscription $subscription The subscription to generate the actions for.
+         * @return array $actions The actions. Array keys are the action names, values are the action link (<a>) tags.
+         */
+        private function get_subscription_list_table_actions($subscription)
+        {
+        }
+        /**
+         * Handles bulk action requests for Subscriptions.
+         *
+         * @param string $redirect_to      The default URL to redirect to after handling the bulk action request.
+         * @param string $action           The action to take against the list of subscriptions.
+         * @param array  $subscription_ids The list of subscription to run the action against.
+         *
+         * @return string The URL to redirect to after handling the bulk action request.
+         */
+        public function handle_subscription_bulk_actions($redirect_to, $action, $subscription_ids)
+        {
+        }
+        /**
+         * Handles bulk updating the status subscriptions.
+         *
+         * @param array  $ids        Subscription IDs to be trashed or deleted.
+         * @param string $new_status The new status to update the subscriptions to.
+         *
+         * @return array Array of query args to redirect to after handling the bulk action request.
+         */
+        private function do_bulk_action_update_status($subscription_ids, $new_status)
+        {
+        }
+        /**
+         * Handles bulk trashing and deleting of subscriptions.
+         *
+         * @param array $ids          Subscription IDs to be trashed or deleted.
+         * @param bool  $force_delete When set, the subscription will be completed deleted. Otherwise, it will be trashed.
+         *
+         * @return array Array of query args to redirect to after handling the bulk action request.
+         */
+        private function do_bulk_action_delete_subscriptions($subscription_ids, $force_delete = \false)
+        {
+        }
+        /**
+         * Handles bulk untrashing of subscriptions.
+         *
+         * @param array $ids Subscription IDs to be restored.
+         *
+         * @return array Array of query args to redirect to after handling the bulk action request.
+         */
+        private function do_bulk_action_untrash_subscriptions($subscription_ids)
+        {
+        }
+        /**
+         * Filters the list of available list table views for Subscriptions when HPOS enabled.
+         *
+         * This function adds links to the top of the Subscriptions List Table to filter the table by status while also showing status count.
+         *
+         * In HPOS, WooCommerce extends the WP_List_Table class and generates these views for Orders, but we need to override this and
+         * manually add the views for Subscriptions which is done by this function.
+         *
+         * @since 5.2.0
+         *
+         * @param array $views
+         *
+         * @return array
+         */
+        public function filter_subscription_list_table_views($views)
+        {
+        }
+        /**
+         * Returns a HTML link to filter the subscriptions list table view by status.
+         *
+         * @param string $status_slug  Status slug used to identify the view.
+         * @param string $status_name  Human-readable name of the view.
+         * @param int    $status_count Number of statuses in this view.
+         * @param bool   $current      If this is the current view.
+         *
+         * @return string
+         */
+        private function get_list_table_view_status_link($status_slug, $status_name, $status_count, $current)
+        {
+        }
+        /**
+         * Returns a list of subscription status slugs and labels that should be visible in the status list.
+         *
+         * @return array slug => label array of order statuses.
+         */
+        private function get_list_table_view_statuses()
+        {
+        }
+        /**
+         * Generates an admin trash or delete subscription URL in a HPOS environment compatible way.
+         *
+         * @param int    $subscription_id The subscription to generate a trash or delete URL for.
+         * @param string $base_action_url The base URL to add the query args to.
+         * @param string $status          The status to generate the URL for. Should be 'trash' or 'delete'.
+         *
+         * @return string The admin trash or delete subscription URL.
+         */
+        private function get_trash_or_delete_subscription_link($subscription_id, $base_action_url, $status)
         {
         }
         /** Deprecated Functions */
@@ -18519,6 +19020,21 @@ namespace {
         protected static function get_item_display_div($item, $item_name, $item_meta_html)
         {
         }
+        /**
+         * Add extra options to the bulk actions dropdown
+         *
+         * It's only on the All Shop Subscriptions screen.
+         * Introducing new filter: woocommerce_subscription_bulk_actions. This has to be done through jQuery as the
+         * 'bulk_actions' filter that WordPress has can only be used to remove bulk actions, not to add them.
+         *
+         * This is a filterable array where the key is the action (will become query arg), and the value is a translatable
+         * string. The same array is used to
+         *
+         * @deprecated 5.3.0
+         */
+        public function print_bulk_actions_script()
+        {
+        }
     }
     /**
      * Subscriptions Management Class
@@ -18549,6 +19065,17 @@ namespace {
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v1.0
          **/
         public static function init()
+        {
+        }
+        /**
+         * Attaches hooks that depend on WooCommerce being loaded.
+         *
+         * We need to use different hooks on stores that have HPOS enabled but to check if this feature
+         * is enabled, we must wait for WooCommerce to be loaded first.
+         *
+         * @since 5.2.0
+         */
+        public static function attach_wc_dependant_hooks()
         {
         }
         /**
@@ -18788,62 +19315,66 @@ namespace {
          *
          * Also make sure all related scheduled actions are cancelled when deleting a subscription.
          *
-         * @param int $post_id The post ID of the WC Subscription or WC Order being trashed
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v1.0
+         *
+         * @param int $order_id The order ID of the WC Subscription or WC Order being trashed
          */
-        public static function maybe_trash_subscription($post_id)
+        public static function maybe_trash_subscription($order_id)
         {
         }
         /**
          * Untrash all subscriptions attached to an order when it's restored.
-         * @param int $post_id The post ID of the WC Order being restored
+         *
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.17
+         *
+         * @param int $order_id The Order ID of the order being restored
          */
-        public static function maybe_untrash_subscription($post_id)
+        public static function maybe_untrash_subscription($order_id)
         {
         }
         /**
          * Delete related subscriptions when an order is deleted.
          *
-         * @author Jeremy Pry
-         *
-         * @param int $post_id The post ID being deleted.
+         * @param int $order_id The post ID being deleted.
          */
-        public static function maybe_delete_subscription($post_id)
+        public static function maybe_delete_subscription($order_id)
         {
         }
         /**
          * Make sure a subscription is cancelled before it is trashed or deleted
          *
-         * @param int $post_id
+         * @param int $id
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.0
          */
-        public static function maybe_cancel_subscription($post_id)
+        public static function maybe_cancel_subscription($id)
         {
         }
         /**
-         * When WordPress trashes a post, it sets a '_wp_trash_meta_status' post meta value so that the post can
-         * be restored to its original status. However, when setting that value, it uses the 'post_status' of a
-         * $post variable in memory. If that status is changed on the 'wp_trash_post' or 'wp_delete_post' hooks,
+         * When an order is trashed, store the '_wp_trash_meta_status' meta value with a cancelled subscription status
+         * to prevent subscriptions being restored with an active status.
+         *
+         * When WordPress and WooCommerce set this meta value, they use the status of the order in memory.
+         * If that status is changed on the before trashed or before deleted hooks,
          * as is the case with a subscription, which is cancelled before being trashed if it is active or on-hold,
          * then the '_wp_trash_meta_status' value will be incorrectly set to its status before being trashed.
          *
          * This function fixes that by setting '_wp_trash_meta_status' to 'wc-cancelled' whenever its former status
          * is something that can not be restored.
          *
-         * @param int $post_id
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.0
+         *
+         * @param int $id
          */
-        public static function fix_trash_meta_status($post_id)
+        public static function fix_trash_meta_status($id)
         {
         }
         /**
          * Trigger action hook after a subscription has been trashed.
          *
-         * @param int $post_id
+         * @param int $id
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.0
          */
-        public static function trigger_subscription_trashed_hook($post_id)
+        public static function trigger_subscription_trashed_hook($id)
         {
         }
         /**
@@ -18867,10 +19398,10 @@ namespace {
         /**
          * Trigger action hook after a subscription has been deleted.
          *
-         * @param int $post_id
+         * @param int $id
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.0
          */
-        public static function trigger_subscription_deleted_hook($post_id)
+        public static function trigger_subscription_deleted_hook($id)
         {
         }
         /**
@@ -21123,19 +21654,32 @@ namespace {
         {
         }
         /**
+         * Attempts to restore the specified subscription back to its original status (after having been trashed).
+         *
+         * @param \WC_Subscription $order The order to be untrashed.
+         *
+         * @return bool If the operation was successful.
+         */
+        public function untrash_order(\WC_Order $subscription) : bool
+        {
+        }
+        /**
+         * Method to delete a subscription from the database.
+         *
+         * @param \WC_Subscription $subscription Subscription object.
+         * @param array            $args Array of args to pass to the delete method.
+         *
+         * @return void
+         */
+        public function delete(&$subscription, $args = array())
+        {
+        }
+        /**
          * Creates a new subscription in the database.
          *
          * @param \WC_Subscription $subscription Subscription object.
          */
         public function create(&$subscription)
-        {
-        }
-        /**
-         * Reads multiple subscription objects from custom tables.
-         *
-         * @param \WC_Order $subscriptions Subscription objects.
-         */
-        public function read_multiple(&$subscriptions)
         {
         }
         /**
@@ -21160,15 +21704,13 @@ namespace {
         {
         }
         /**
-         * Sets subscription core properties.
+         * Initializes the subscription based on data received from the database.
          *
-         * This function is called when the subscription is being read from the database and ensures that
-         * core subscription properties ($this->subscription_meta_keys_to_props) are loaded directly from the
-         * database and set on the subscription via the equivalent setter.
-         *
-         * @param \WC_Order $subscription Subscription object.
+         * @param WC_Abstract_Order $subscription      The subscription object.
+         * @param int               $subscription_id   The subscription's ID.
+         * @param stdClass          $subscription_data All the subscription's data, retrieved from the database.
          */
-        private function set_subscription_props($subscription)
+        protected function init_order_record(\WC_Abstract_Order &$subscription, int $subscription_id, \stdClass $subscription_data)
         {
         }
         /**
@@ -21230,6 +21772,14 @@ namespace {
         public function delete_all_metadata_by_key($meta_key)
         {
         }
+        /**
+         * Count subscriptions by status.
+         *
+         * @return array
+         */
+        public function get_subscriptions_count_by_status()
+        {
+        }
     }
     /**
      * Define requirements for a customer data store and provide method for accessing active data store.
@@ -21282,17 +21832,33 @@ namespace {
     class WCS_Customer_Store_CPT extends \WCS_Customer_Store
     {
         /**
-         * The meta key used to link a customer with a subscription.
+         * The post meta key used to link a customer with a subscription.
          *
          * @var string
          */
         private $meta_key = '_customer_user';
         /**
-         * Get the meta key used to link a customer with a subscription.
+         * The object data key (property) used to link a customer with a subscription.
          *
-         * @return string
+         * @var string
+         */
+        private $data_key = 'customer_id';
+        /**
+         * Gets the post meta key used to link a customer with a subscription.
+         *
+         * @return string The customer user post meta key.
          */
         protected function get_meta_key()
+        {
+        }
+        /**
+         * Gets the data key used to link the customer with a subscription.
+         *
+         * This can be the post meta key on stores using the WP Post architecture and the property name on HPOS architecture.
+         *
+         * @return string The customer user post meta key or the customer ID property key.
+         */
+        protected function get_data_key()
         {
         }
         /**
@@ -21530,6 +22096,14 @@ namespace {
         public function delete_all_metadata_by_key($meta_key)
         {
         }
+        /**
+         * Count subscriptions by status.
+         *
+         * @return array
+         */
+        public function get_subscriptions_count_by_status()
+        {
+        }
     }
     /**
      * Define requirements for a related order data store and provide method for accessing active data store.
@@ -21755,9 +22329,9 @@ namespace {
         /**
          * Keep cache up-to-date with changes to our meta data using a meta cache manager.
          *
-         * @var WCS_Post_Meta_Cache_Manager
+         * @var WCS_Post_Meta_Cache_Manager|WCS_Object_Data_Cache_Manager
          */
-        protected $post_meta_cache_manager;
+        protected $object_data_cache_manager;
         /**
          * Store order relations using meta keys as the array key for more performant searches
          * in @see $this->get_relation_type_for_meta_key() than using array_search().
@@ -21781,6 +22355,17 @@ namespace {
          * Constructor
          */
         public function __construct()
+        {
+        }
+        /**
+         * Gets the legacy protected variables for backwards compatibility.
+         *
+         * Throws a deprecated warning if accessing the now deprecated variables.
+         *
+         * @param string $name The variable name.
+         * @return WCS_Post_Meta_Cache_Manager_Many_To_One|WCS_Object_Data_Cache_Manager_Many_To_One Depending on the HPOS environment.
+         */
+        public function __get($name)
         {
         }
         /**
@@ -22105,23 +22690,33 @@ namespace {
      *
      * @version  1.0.0 - Migrated from WooCommerce Subscriptions v2.3.0
      * @category Class
-     * @author   Prospress
      */
     class WCS_Customer_Store_Cached_CPT extends \WCS_Customer_Store_CPT implements \WCS_Cache_Updater
     {
         /**
-         * Keep cache up-to-date with changes to our meta data via WordPress post meta APIs
-         * by using a post meta cache manager.
+         * Keep the cache up-to-date with changes to our meta data via WordPress post meta APIs
+         * or WC CRUD APIs by using a data cache manager.
          *
-         * @var WCS_Post_Meta_Cache_Manager_Many_To_One
+         * @var WCS_Post_Meta_Cache_Manager_Many_To_One|WCS_Object_Data_Cache_Manager_Many_To_One Depending on the HPOS environment.
          */
-        protected $post_meta_cache_manager;
+        protected $object_data_cache_manager;
         /**
          * Meta key used to store all of a customer's subscription IDs in their user meta.
          *
          * @var string
          */
         const _CACHE_META_KEY = '_wcs_subscription_ids_cache';
+        /**
+         * Gets the legacy protected variables for backwards compatibility.
+         *
+         * Throws a deprecated warning if accessing the now deprecated variables.
+         *
+         * @param string $name The variable name.
+         * @return WCS_Post_Meta_Cache_Manager_Many_To_One|WCS_Object_Data_Cache_Manager_Many_To_One Depending on the HPOS environment.
+         */
+        public function __get($name)
+        {
+        }
         /**
          * Constructor
          */
@@ -22219,13 +22814,13 @@ namespace {
         /**
          * If there is a change to a subscription's post meta key, update the user meta cache.
          *
-         * @param string $update_type The type of update to check. Can be 'add', 'update' or 'delete'.
-         * @param int $subscription_id The subscription's post ID where the customer is being changed.
-         * @param string $meta_key The post meta key being changed.
-         * @param mixed $user_id The meta value, which will be subscriber's user ID when $meta_key is '_customer_user'.
-         * @param mixed $old_user_id The previous value stored in the database for the subscription's '_customer_user'. Optional.
+         * @param string $update_type      The type of update to check. Can be 'add', 'update' or 'delete'.
+         * @param int    $subscription_id  The subscription's ID where the customer is being changed.
+         * @param string $updated_data_key The object's data key being changed. Can be a post meta key or a property name.
+         * @param mixed  $user_id          The new value stored in the database for the subscription's customer. This could be any type of value but is a user ID when the customer is being changed.
+         * @param mixed  $old_user_id      The previous value stored in the database for the subscription's customer ID. Optional.
          */
-        public function maybe_update_for_post_meta_change($update_type, $subscription_id, $meta_key, $user_id, $old_user_id = '')
+        public function maybe_update_for_post_meta_change($update_type, $subscription_id, $updated_data_key, $user_id, $old_user_id = '')
         {
         }
         /**
@@ -22320,8 +22915,8 @@ namespace {
          * Add a "Change Shipping Address" button to the "My Subscriptions" table for those subscriptions
          * which require shipping.
          *
-         * @param array $all_actions The $subscription_id => $actions array with all actions that will be displayed for a subscription on the "My Subscriptions" table
-         * @param array $subscriptions All of a given users subscriptions that will be displayed on the "My Subscriptions" table
+         * @param array $actions The $subscription_id => $actions array with all actions that will be displayed for a subscription on the "My Subscriptions" table
+         * @param \WC_Subscription $subscription the Subscription object that is being viewed.
          * @since 1.0.0 - Migrated from WooCommerce Subscriptions v1.3
          */
         public static function add_edit_address_subscription_action($actions, $subscription)
@@ -23226,7 +23821,7 @@ namespace {
         /**
          * Gets subscription counts.
          *
-         * @return array
+         * @return array Subscription count by status. Keys are subscription status slugs, values are subscription counts (string).
          */
         private static function get_subscription_counts()
         {
@@ -23234,7 +23829,7 @@ namespace {
         /**
          * Gets subscription order counts and totals.
          *
-         * @return array
+         * @return array Subscription order counts and totals by type (initial, switch, renewal, resubscribe). Values are returned as strings.
          */
         private static function get_subscription_orders()
         {
@@ -23242,7 +23837,7 @@ namespace {
         /**
          * Gets first and last subscription created dates.
          *
-         * @return array
+         * @return array 'first' and 'last' created subscription dates as a string in the date format 'Y-m-d H:i:s' or '-'.
          */
         private static function get_subscription_dates()
         {
@@ -24416,13 +25011,12 @@ namespace {
         {
         }
         /**
-         * Maybe adds a warning message to subscription script parameters which is used in a Javascript dialog if the
-         * payment method of the subscription is set to be changed. The warning message is only added if the subscriptions
-         * payment gateway is PayPal Standard.
+         * Adds script parameters necessary to display a JS dialog when changing a PayPal subscription's payment method.
+         *
+         * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.0
          *
          * @param array $script_parameters The script parameters used in subscription meta boxes.
          * @return array $script_parameters
-         * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.0
          */
         public static function maybe_add_change_payment_method_warning($script_parameters)
         {
@@ -28691,7 +29285,7 @@ namespace {
      * @return array
      * @since  1.0.0 - Migrated from WooCommerce Subscriptions v2.0
      */
-    function wcs_get_subscriptions_for_product($product_ids, $fields = 'ids', $args = array())
+    function wcs_get_subscriptions_for_product($product_ids, $fields = 'ids', $args = [])
     {
     }
     /**
@@ -29004,6 +29598,19 @@ namespace {
     {
     }
     /**
+     * Compares an order's billing address and shipping address and returns true if they are the same.
+     *
+     * @since 5.3.0
+     *
+     * @see woocommerce_ship_to_different_address_checked
+     *
+     * @param  WC_Order $order
+     * @return bool     True if the order's billing address and shipping address are the same, false otherwise.
+     */
+    function wcs_compare_order_billing_shipping_address($order)
+    {
+    }
+    /**
      * Return an i18n'ified associative array of all possible subscription periods.
      *
      * @param int (optional) An interval in the range 1-6
@@ -29222,11 +29829,11 @@ namespace {
     {
     }
     /**
-     * PHP on Windows does not have strptime function. Therefore this is what we're using to check
-     * whether the given time is of a specific format.
+     * Validate whether a given datetime matches the mysql pattern of YYYY-MM-DD HH:MM:SS
+     * This function will return false when the date or time is invalid (e.g. 2015-02-29 00:00:00)
      *
      * @param  string $time the mysql time string
-     * @return boolean      true if it matches our mysql pattern of YYYY-MM-DD HH:MM:SS
+     * @return boolean      if the string is valid
      */
     function wcs_is_datetime_mysql_format($time)
     {
@@ -29932,6 +30539,44 @@ namespace {
      * @return bool True if the order tables are synchronized with WP posts, false otherwise.
      */
     function wcs_is_custom_order_tables_data_sync_enabled()
+    {
+    }
+    /**
+     * Sets the address on an order or subscription using WC 7.1 functions if they exist.
+     *
+     * For stores pre WC 7.1, use the individual addresss type and key setter i.e. `set_billing_address_1()` method.
+     *
+     * @since 5.2.0
+     *
+     * @param WC_Order|WC_Subscription $order        The order or subscription object to set the address on.
+     * @param string                   $address_type The address type to set. Either 'billing' or 'shipping'.
+     * @param array                    $address      The address to set.
+     */
+    function wcs_set_order_address($order, $address, $address_type = 'billing')
+    {
+    }
+    /**
+     * Gets an object's admin page screen ID in a WC version compatible way.
+     *
+     * This function is a version compatible wrapper for wc_get_page_screen_id().
+     *
+     * @param string $object_type The object type. eg 'shop_subscription', 'shop_order'.
+     * @return string The page screen ID. On CPT stores, the screen ID is equal to the post type. On HPOS, the screen ID is generated by WC and fetched via wc_get_page_screen_id().
+     */
+    function wcs_get_page_screen_id($object_type)
+    {
+    }
+    /**
+     * Outputs a select input box.
+     *
+     * This function is a compatibility wrapper for woocommerce_wp_select() which introduced the second parameter necessary for working with HPOS in WC 6.9.0.
+     *
+     * @since 5.2.0
+     *
+     * @param array   $field_args Field data.
+     * @param WC_Data $object     The WC object to get the field value from. Only used in WC 6.9.0+. On older versions of WC, the value is fetched from the global $post object.
+     */
+    function wcs_woocommerce_wp_select($field_args, $object)
     {
     }
     /**

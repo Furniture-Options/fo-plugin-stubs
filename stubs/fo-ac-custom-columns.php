@@ -96,9 +96,8 @@ class FO_Order_Number extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
-     *
-     * @return string Value
+     * @param  int $id    ID of column.
+     * @return string     Value of column.
      */
     public function get_value($id)
     {
@@ -174,9 +173,8 @@ class FO_SubscriptionLength extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
-     *
-     * @return string Value
+     * @param  int $id    ID of column.
+     * @return string     Value of column.
      */
     public function get_value($id)
     {
@@ -216,9 +214,9 @@ class FO_OtherFees extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
+     * @param  int $id    ID of column.
      *
-     * @return string Value
+     * @return string     Value of column.
      */
     public function get_value($id)
     {
@@ -238,9 +236,8 @@ class FO_TripFee extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
-     *
-     * @return string Value
+     * @param  int $id    ID of column.
+     * @return string     Value of column.
      */
     public function get_value($id)
     {
@@ -257,9 +254,8 @@ class Sage_ARDivisionNo extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
-     *
-     * @return string Value
+     * @param  int $id    ID of column.
+     * @return string     Value of column.
      */
     public function get_value($id)
     {
@@ -279,9 +275,8 @@ class FO_HousewaresSetupService extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
-     *
-     * @return string Value
+     * @param  int $id    ID of column.
+     * @return string     Value of column.
      */
     public function get_value($id)
     {
@@ -298,9 +293,8 @@ class Sage_DocumentType extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
-     *
-     * @return string Value
+     * @param  int $id    ID of column.
+     * @return string     Value of column.
      */
     public function get_value($id)
     {
@@ -317,9 +311,8 @@ class Sage_ContractType extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
-     *
-     * @return string Value
+     * @param  int $id    ID of column.
+     * @return string     Value of column.
      */
     public function get_value($id)
     {
@@ -336,9 +329,8 @@ class Sage_OrderStatus extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
-     *
-     * @return string Value
+     * @param  int $id    ID of column.
+     * @return string     Value of column.
      */
     public function get_value($id)
     {
@@ -358,9 +350,8 @@ class FO_CPP extends \AC\Column
     /**
      * Returns the display value for the column.
      *
-     * @param int $id ID
-     *
-     * @return string Value
+     * @param  int $id    ID of column.
+     * @return string     Column value.
      */
     public function get_value($id)
     {

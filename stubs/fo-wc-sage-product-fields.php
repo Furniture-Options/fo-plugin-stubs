@@ -224,6 +224,14 @@ class WC_Store_Exporter_Deluxe
     public function __wakeup()
     {
     }
+    /**
+     * Fix args for WP_Query used by the export.
+     *
+     * @param array $args  Query args
+     */
+    public function filter_subscriptions_query_args($args)
+    {
+    }
     // add custom sage fields to order item / subscription item field list
     public function add_order_item_fields($fields)
     {
